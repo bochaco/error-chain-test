@@ -3,5 +3,5 @@
 
 Run example with:
 ```
-$ cargo +nightly run --release -- myfile.txt
+$ RUST_LIB_BACKTRACE=1 cargo +nightly run --release -- myfile.txt
 ```

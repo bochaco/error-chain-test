@@ -13,6 +13,8 @@ pub enum DataError {
     ConfigInfoNotFound,
     #[error("Contact information not found: {0}")]
     ContactInfoNotFound(String),
+    #[error("Our own Error but has a generic source")]
+    SourceIsGeneric(#[from] Box<dyn std::error::Error>),
 }
 
 #[derive(Error, Debug)]
@@ -38,7 +40,13 @@ pub enum FileReadError {
 }
 
 // read name and phone number from file
-pub fn read_data(path: Option<&str>) -> Result<(String, String), DataError> {
+pub fn read_data(path: Option<&str>, throw_generic: bool) -> Result<(String, String), DataError> {
+    // just testing generic error type
+    if throw_generic {
+        let source_err = std::io::Error::new(std::io::ErrorKind::Other, "oh no! a generic source");
+        return Err(DataError::SourceIsGeneric(Box::new(source_err)));
+    }
+
     let file_path = match path {
         Some(p) => p.to_string(),
         None => {
