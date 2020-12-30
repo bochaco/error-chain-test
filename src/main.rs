@@ -13,7 +13,10 @@ fn main() -> Result<()> {
     args.next();
     match read_data(args.next().as_deref()) {
         Err(err) => {
+            println!("-----------------");
             println!("BACKTRACE: {:?}", err.backtrace());
+            println!("ERR: {:?}", err);
+            println!("ERR DISPLAY: {}", err);
             let mut curr_err = err.source();
             let mut index = 0;
             while let Some(src) = curr_err {
@@ -21,8 +24,12 @@ fn main() -> Result<()> {
                 curr_err = src.source();
                 index += 1;
             }
+            println!("-----------------");
             bail!(err)
         }
-        Ok(()) => Ok(()),
+        Ok((name, phone)) => {
+            println!("Please call {} at the number {}", name, phone);
+            Ok(())
+        }
     }
 }
